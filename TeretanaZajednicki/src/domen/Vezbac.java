@@ -23,6 +23,8 @@ public class Vezbac extends OpstiDomenskiObjekat implements Serializable{
     private double tezina;
     private int clanarina;
     
+    private String kriterijumPretrage;
+    
     public Vezbac(){
         
     }
@@ -83,6 +85,15 @@ public class Vezbac extends OpstiDomenskiObjekat implements Serializable{
     public void setClanarina(int clanarina) {
         this.clanarina = clanarina;
     }
+
+    public String getKriterijumPretrage() {
+        return kriterijumPretrage;
+    }
+
+    public void setKriterijumPretrage(String kriterijumPretrage) {
+        this.kriterijumPretrage = kriterijumPretrage;
+    }
+    
     
     @Override
     public String toString(){
@@ -103,7 +114,7 @@ public class Vezbac extends OpstiDomenskiObjekat implements Serializable{
     public List<OpstiDomenskiObjekat> vratiListu(ResultSet rs) throws SQLException {
         ArrayList<OpstiDomenskiObjekat> lista = new ArrayList<>();
         while(rs.next()){
-                int id = rs.getInt("ID");
+                int id = rs.getInt("VezbacID");
                 String ime = rs.getString("Ime");
                 String prezime = rs.getString("Prezime");
                 double visina = rs.getDouble("Visina");
@@ -118,27 +129,34 @@ public class Vezbac extends OpstiDomenskiObjekat implements Serializable{
 
     @Override
     public String vratiSve() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "vezbac v";
     }
 
     @Override
     public String vratiKolonu() {
-         return "ID";
+         return "VezbacID";
     }
 
     @Override
     public String vratiUslov() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         try {
+                int id = Integer.parseInt(kriterijumPretrage);
+                return "VezbacID = " +id;
+            } catch (Exception e) {
+                return "Ime like '%" + kriterijumPretrage + "%' OR Prezime like '%"
+                        + kriterijumPretrage  + "%'";
+            }
     }
 
     @Override
     public String vratiVrednostiZaUpdate() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "Ime= '" + ime + "' , Prezime= '" + prezime + "' , Visina= '" + visina + "' , Tezina= '" + tezina + "' , Clanarina= '" + clanarina + "'";
     }
 
     @Override
     public String vratiUslovZaUpdate() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         System.out.println(vezbacID);
+        return "VezbacID = '" + vezbacID + "'";
     }
 
     @Override

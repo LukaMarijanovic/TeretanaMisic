@@ -19,6 +19,8 @@ public class Trening extends OpstiDomenskiObjekat implements Serializable{
      private int treningID;
     private String naziv;
     private String vrsta;
+    private List<Vezbe> listaVezbi;
+    private String kriterijumPretrage;
     
     public Trening(){
         
@@ -28,6 +30,13 @@ public class Trening extends OpstiDomenskiObjekat implements Serializable{
         this.treningID = treningID;
         this.naziv = naziv;
         this.vrsta = vrsta;
+    }
+    
+     public Trening(int treningID, String naziv, String vrsta, List<Vezbe> listaVezbi){
+        this.treningID = treningID;
+        this.naziv = naziv;
+        this.vrsta = vrsta;
+        this.listaVezbi = listaVezbi;
     }
 
     public int getTreningID() {
@@ -53,6 +62,24 @@ public class Trening extends OpstiDomenskiObjekat implements Serializable{
     public void setVrsta(String vrsta) {
         this.vrsta = vrsta;
     }
+
+    public List<Vezbe> getListaVezbi() {
+        return listaVezbi;
+    }
+
+    public void setListaVezbi(List<Vezbe> listaVezbi) {
+        this.listaVezbi = listaVezbi;
+    }
+
+    public String getKriterijumPretrage() {
+        return kriterijumPretrage;
+    }
+
+    public void setKriterijumPretrage(String kriterijumPretrage) {
+        this.kriterijumPretrage = kriterijumPretrage;
+    }
+    
+    
     
     @Override
     public String toString(){
@@ -85,27 +112,34 @@ public class Trening extends OpstiDomenskiObjekat implements Serializable{
 
     @Override
     public String vratiSve() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "trening t";
     }
 
     @Override
     public String vratiKolonu() {
-        return "ID";
+        return "TreningID";
     }
 
     @Override
     public String vratiUslov() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+           try {
+                int id = Integer.parseInt(kriterijumPretrage);
+                return "TreningID = " +id;
+            } catch (Exception e) {
+                return "Naziv like '%" + kriterijumPretrage + "%' OR Vrsta like '%"
+                        + kriterijumPretrage  + "%'";
+            }
     }
 
     @Override
     public String vratiVrednostiZaUpdate() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       return "Naziv= '" + naziv + "' , Vrsta= '" + vrsta + "'";
     }
 
     @Override
     public String vratiUslovZaUpdate() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println(treningID);
+        return "TreningID = '" + treningID + "'";
     }
 
     @Override

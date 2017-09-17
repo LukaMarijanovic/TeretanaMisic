@@ -16,20 +16,38 @@ import java.util.List;
  * @author Lazar
  */
 public class Vezbe extends OpstiDomenskiObjekat implements Serializable{
+    private Trening trening;
      private int vezbeID;
     private String naziv;
     private String fokus;
     private int vremeTrajanja;
+    private String kriterijumPretrage;
     
     public Vezbe(){
         
     }
     
-    public Vezbe(int vezbeID, String naziv, String fokus, int vremeTrajanja){
+     public Vezbe(int vezbeID, String naziv, String fokus, int vremeTrajanja){
         this.vezbeID = vezbeID;
         this.naziv = naziv;
         this.fokus = fokus;
         this.vremeTrajanja = vremeTrajanja;
+    }
+    
+    public Vezbe(Trening trening,int vezbeID, String naziv, String fokus, int vremeTrajanja){
+        this.trening = trening;
+        this.vezbeID = vezbeID;
+        this.naziv = naziv;
+        this.fokus = fokus;
+        this.vremeTrajanja = vremeTrajanja;
+    }
+
+    public Trening getTrening() {
+        return trening;
+    }
+
+    public void setTrening(Trening trening) {
+        this.trening = trening;
     }
 
     public int getVezbeID() {
@@ -63,6 +81,16 @@ public class Vezbe extends OpstiDomenskiObjekat implements Serializable{
     public void setVremeTrajanja(int vremeTrajanja) {
         this.vremeTrajanja = vremeTrajanja;
     }
+
+    public String getKriterijumPretrage() {
+        return kriterijumPretrage;
+    }
+
+    public void setKriterijumPretrage(String kriterijumPretrage) {
+        this.kriterijumPretrage = kriterijumPretrage;
+    }
+    
+    
     
     @Override
     public String toString(){
@@ -83,12 +111,15 @@ public class Vezbe extends OpstiDomenskiObjekat implements Serializable{
     public List<OpstiDomenskiObjekat> vratiListu(ResultSet rs) throws SQLException {
         ArrayList<OpstiDomenskiObjekat> lista = new ArrayList<>();
         while(rs.next()){
-                int id = rs.getInt("ID");
+            int treningid = rs.getInt("TreningID");
+            String nazivtr = rs.getString("Naziv");
+            Trening tr = new Trening(treningid, nazivtr, null);
+                int id = rs.getInt("VezbaID");
                 String naziv = rs.getString("Naziv");
                 String fokus = rs.getString("Fokus");
                 int vremeTrajanja = rs.getInt("VremeTrajanja");
                 
-                Vezbe vezbe = new Vezbe(id, naziv, fokus, vremeTrajanja);
+                Vezbe vezbe = new Vezbe(tr, id, naziv, fokus, vremeTrajanja);
                 lista.add(vezbe);
             }
         return lista;
@@ -96,27 +127,34 @@ public class Vezbe extends OpstiDomenskiObjekat implements Serializable{
 
     @Override
     public String vratiSve() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "vezbe v JOIN trening t ON v.treningid = t.treningid";
     }
 
     @Override
     public String vratiKolonu() {
-        return "ID";
+        return "VezbaID";
     }
 
     @Override
     public String vratiUslov() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+           try {
+                int id = Integer.parseInt(kriterijumPretrage);
+                return "VezbaID = " +id;
+            } catch (Exception e) {
+                return "Naziv like '%" + kriterijumPretrage + "%' OR Fokus like '%"
+                        + kriterijumPretrage  + "%'";
+            }
     }
 
     @Override
     public String vratiVrednostiZaUpdate() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "Naziv= '" + naziv + "' Fokus= '" + fokus + "Vreme trajanja='" + vremeTrajanja + "'";
     }
 
     @Override
     public String vratiUslovZaUpdate() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println(vezbeID);
+        return "VezbaID = '" + vezbeID + "'";
     }
 
     @Override
